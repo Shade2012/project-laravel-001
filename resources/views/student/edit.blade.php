@@ -7,9 +7,9 @@
   @csrf
   @method('put')
     <div class="row mb-3">
-      <label for="nis" class="col-sm-2 col-form-label">NIS Siswa</label>
+      <label for="nis" class="col-sm-2 col-form-label">NIS Siswa </label>
        <div class="col-sm-10">                                                                                                  {{-- readonly --}}
-        <input type="text" class="form-control" id="nis" required value="{{old('nis_siswa',$student->nis_siswa)}}" name="nis_siswa" disabled>
+        <input type="text" class="form-control" id="nis" required value="{{old('nis_siswa',$student->nis_siswa)}}" name="nis_siswa" readonly>
       </div>
     </div>
     <div class="row mb-3">
@@ -26,9 +26,15 @@
       </div>
       <div class="row mb-3">
         <label for="kelas" class="col-sm-2 col-form-label">Kelas Siswa</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="kelas" required value="{{old('kelas_siswa',$student->kelas_siswa)}}" name="kelas_siswa">
-        </div>
+         <div class="col-sm-10">
+        <select class="form-select" name="kelas_id" id="kelas_id" >
+          @foreach ($kelas as $kelasOption) 
+          <option value="{{ $kelasOption->id }}" {{ $kelasOption->id == $student->kelas_id ? 'selected' : '' }}>
+            {{ $kelasOption->kelas_siswa }}
+        </option>
+          @endforeach
+        </select>
+      </div>
       </div>
       <div class="row mb-3">
         <label for="alamat" class="col-sm-2 col-form-label">Alamat Siswa</label>

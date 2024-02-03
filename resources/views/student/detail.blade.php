@@ -14,7 +14,7 @@
     {{$student->tanggal_lahir}}
     </li>
     <li>
-    {{$student->kelas_siswa}}
+    <td>{{$student->kelas->kelas_siswa ?? 'Tidak ada kelas' }}</td>
     </li>
     <li>
     {{$student->alamat_siswa}}

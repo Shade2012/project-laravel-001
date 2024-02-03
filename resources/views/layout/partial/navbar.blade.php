@@ -18,7 +18,8 @@
             <li><a class="dropdown-item" href="/home">Home</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="/about">About</a></li>
-            <li><a class="dropdown-item" href="student/all">Student</a></li>
+            <li><a class="dropdown-item" href="/student/all">Student</a></li>
+            <li><a class="dropdown-item" href="/kelas/all">Kelas</a></li>
           </ul>
         </li>
       </ul>
