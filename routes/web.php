@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Students;
+use App\Models\Kelas;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\StudentController;
 
 /*
@@ -45,5 +47,13 @@ Route::group(["prefix"=>"/student"],function(){
     Route::post('/add', [StudentController::class, 'add']);
     Route::delete('/delete/{student}', [StudentController::class,'destroy']);
 });
-
+Route::group(["prefix"=>"/kelas"],function(){
+    Route::get('/all', [KelasController::class, 'index']);
+    Route::get('/detail/{kelas}', [KelasController::class, 'show']);
+    Route::get('/edit/{kelas}', [KelasController::class, 'edit']);
+    Route::put('/update/{kelas}', [KelasController::class, 'update']);
+    Route::get('/create', [KelasController::class, 'create']);
+    Route::post('/add', [KelasController::class, 'add']);
+    Route::delete('/delete/{kelas}', [KelasController::class,'destroy']);
+});
 

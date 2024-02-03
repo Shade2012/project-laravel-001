@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Kelas;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class StudentController extends Controller
         $title = "Add Data";
         return view("student.create", [
             "title" => $title,
+            "kelas" => Kelas::all()
         ]);
         
     }
@@ -40,17 +42,28 @@ class StudentController extends Controller
         $title = "Edit " . $student->nama_siswa;
     return view('student.edit',[
     "title"=>"$title",
-    "student"=> $student
+    "student"=> $student,
+    "kelas" => Kelas::all()
         ]);
     }
     //Kalau mau pakai disable di input nis di edit.blade.php maka pake kodingan ini dan pasang disable di input nis
     public function update(Request $request, $studentId){
+        $validateData = $request->validate([
+            "nis_siswa" => "required|max:255",
+            "nama_siswa" => "required|max:255",
+            "tanggal_lahir" => "required",
+            "kelas_id" => "required", 
+            "alamat_siswa" => "required"
+        ]);
+    
         $student = Student::find($studentId);
-        $result = $student->update($request->all());
+        $result = $student->update($validateData);
+    
         if ($result) {
-            return redirect('/student/all')->with('success','Data Siswa berhasil dirubah');
+            return redirect('/student/all')->with('success', 'Data Siswa berhasil dirubah');
         }
     }
+    
     //sedangkan kalau mau hanya memakai readonly alias yang sekarang bisa pakai yang ini
     // public function update(Request $request, Student $student){
     //     $validateData = $request->validate([
@@ -70,12 +83,18 @@ class StudentController extends Controller
             "nis_siswa" => "required|max:255",
             "nama_siswa" => "required|max:255",
             "tanggal_lahir" => "required",
-            "kelas_siswa" => "required",
+            "kelas_id" => "required",
             "alamat_siswa" => "required"
         ]);
+        $existingNis = Student::where('nis_siswa',$validateData['nis_siswa'])->first();
+        if ($existingNis) {
+            return back()->withInput()->with('errorNis', 'NIS Siswa sudah terdaftar');
+        }
         $result = Student::create($validateData);
         if ($result) {
             return redirect('/student/all')->with('success','Data Siswa berhasil ditambah');
+        } else {
+            return back()->withInput()->with('error', 'Gagal Menambahkan data');
         }
         
         }

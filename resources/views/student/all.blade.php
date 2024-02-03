@@ -20,17 +20,17 @@
     </thead>
       @foreach ($students as $student)
         <tbody>
-            <td>{{$student["nis_siswa"]}}</td>
-            <td>{{$student["nama_siswa"]}}</td>
-            <td>{{$student["kelas_siswa"]}}</td>
-            <td>{{$student["alamat_siswa"]}}</td>
+            <td>{{$student->nis_siswa}}</td>
+            <td>{{$student->nama_siswa}}</td>
+            <td>{{$student->kelas->kelas_siswa ?? 'Tidak ada kelas' }}</td>
+            <td>{{$student->alamat_siswa}}</td>
             <td>
                 <a type="button" href="/student/detail/{{$student->id}}"  class="btn btn-primary"  style="color: black">Detail</a>
                 <a type="button" href="/student/edit/{{$student->id}}"  class="btn btn-warning">Edit</a>
                 <form action="/student/delete/{{$student->id}}" method="post" class="d-inline">
                     @method('delete')
                     @csrf
-                <button type="submit" class="btn btn-danger" style="color: black">Delete</button>
+                        <button onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger" style="color: black">Delete</button>
                 </form>
         </td>
         </tbody>
