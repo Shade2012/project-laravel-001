@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Students;
 use App\Models\Kelas;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\HomeAboutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,23 +23,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function(){
-    return view('home',[
-        "title" => "Home"
-    ]);
-});
+Route::get('/home', [HomeAboutController::class, 'home']);
 
-Route::get('/about', function(){
-return view('about',[
-    "title" => "About",
-    "name" => "Damar Fikri Haikal",
-    "email" =>"damarfikrihaikal2@gmail.com",
-    "kelas" => "11 PPLG 2",
-    "image" => "image/damar02.jpg",
-    "github" => "https://github.com/Shade2012",
-    "linkedin" => "https://www.linkedin.com/in/damar-fikri-haikal-539b65294/",
-]);
+Route::group(["prefix"=>"/login"],function(){
+    Route::get('/index', [AuthController::class, 'login']);
+    Route::post('/post', [AuthController::class, 'loginPost']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+Route::group(["prefix"=>"/register"],function(){
+    Route::post('/store', [AuthController::class, 'store']);
+    Route::get('/index', [AuthController::class, 'register']);
+});
+Route::get('/about', [HomeAboutController::class, 'about']);
+
 Route::group(["prefix"=>"/student"],function(){
     Route::get('/all', [StudentController::class, 'index']);
     Route::get('/detail/{student}', [StudentController::class, 'show']);
@@ -55,5 +53,28 @@ Route::group(["prefix"=>"/kelas"],function(){
     Route::get('/create', [KelasController::class, 'create']);
     Route::post('/add', [KelasController::class, 'add']);
     Route::delete('/delete/{kelas}', [KelasController::class,'destroy']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('dashboard')->group(function () {
+        Route::prefix('student')->group(function () {
+            Route::get('/all', [StudentController::class, 'index']);
+            Route::get('/detail/{student}', [StudentController::class, 'show']);
+            Route::get('/edit/{student}', [StudentController::class, 'edit']);
+            Route::put('/update/{student}', [StudentController::class, 'update']);
+            Route::get('/create', [StudentController::class, 'create']);
+            Route::post('/add', [StudentController::class, 'add']);
+            Route::delete('/delete/{student}', [StudentController::class,'destroy']);
+        });
+        Route::group(["prefix"=>"/kelas"],function(){
+            Route::get('/all', [KelasController::class, 'index']);
+            Route::get('/detail/{kelas}', [KelasController::class, 'show']);
+            Route::get('/edit/{kelas}', [KelasController::class, 'edit']);
+            Route::put('/update/{kelas}', [KelasController::class, 'update']);
+            Route::get('/create', [KelasController::class, 'create']);
+            Route::post('/add', [KelasController::class, 'add']);
+            Route::delete('/delete/{kelas}', [KelasController::class,'destroy']);
+        });
+    });
 });
 

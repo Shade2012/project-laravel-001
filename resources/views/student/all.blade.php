@@ -26,12 +26,8 @@
             <td>{{$student->alamat_siswa}}</td>
             <td>
                 <a type="button" href="/student/detail/{{$student->id}}"  class="btn btn-primary"  style="color: black">Detail</a>
-                <a type="button" href="/student/edit/{{$student->id}}"  class="btn btn-warning">Edit</a>
-                <form action="/student/delete/{{$student->id}}" method="post" class="d-inline">
-                    @method('delete')
-                    @csrf
-                        <button onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger" style="color: black">Delete</button>
-                </form>
+
+              
         </td>
         </tbody>
     @endforeach

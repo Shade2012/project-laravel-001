@@ -22,8 +22,30 @@
             <li><a class="dropdown-item" href="/kelas/all">Kelas</a></li>
           </ul>
         </li>
+        
       </ul>
     </div>
+    <div class="nav-item">
+      <div style="display: flex" class="nav-item">
+        @auth
+        @if(Auth::check())
+          <a class="nav-link me-md-4" ><i class="fa-solid fa-user"></i> User</a>
+          @else
+          <a class="nav-link me-md-4" href="/login/index"><i class="fa-solid fa-user"></i> Guest</a>
+            @endif
+            <form action="/login/logout" method="post">
+                @csrf
+                <button type="submit" class="btn btn-link nav-link me-md-4"><i class="fa-solid fa-sign-out"></i> Logout</button>
+            </form>
+        @else
+     
+          <a class="nav-link me-md-4" href="/login/index"><i class="fa-solid fa-user"></i> Guest</a>
+          
+        @endauth
+    </div>
+      
+  </div>
+  
   </div>
 </nav>
 
