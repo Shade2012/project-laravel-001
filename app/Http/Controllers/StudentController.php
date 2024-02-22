@@ -5,45 +5,58 @@ use App\Models\Kelas;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    public function index(){
-        return view('student.all',[
+    public function index()
+    {
+        $students = Student::all();
+        return view('dashboard.student.all', [
             "title" => "Students",
-           "students" => Student::all()
+            "students" => $students,
+            "isAuthenticated" => Auth::check(),
         ]);
     }
-    public function show($studentId){
-        $student = Student::find($studentId);
+    public function show($studentId)
+    {
+        $student = Student::findOrFail($studentId);
         $title = "Details " . $student->nama_siswa;
-    
-        return view("student.detail", [
+        return view("dashboard.student.detail", [
             "title" => $title,
-            "student" => $student
+            "student" => $student,
+            "isAuthenticated" => Auth::check(),
         ]);
     }
   
-    public function destroy(Student $student){
-        $result = $student->delete();;
-        if($result){
-        return redirect('/student/all')->with('success','Data Siswa berhasil dihapus');
+    public function destroy(Student $student)
+    {
+        if (Auth::check()) {
+            $student->delete();
+            return redirect('/dashboard/student/all')->with('success', 'Data Siswa berhasil dihapus');
         }
+        return redirect('/dashboard/student/all')->with('error', 'Unauthorized action');
     }
+
     public function create(){
+        
         $title = "Add Data";
-        return view("student.create", [
+        return view("dashboard.student.create", [
             "title" => $title,
-            "kelas" => Kelas::all()
+            "kelas" => Kelas::all(),
+            
         ]);
         
     }
     public function edit(Student $student){
+        
         $title = "Edit " . $student->nama_siswa;
-    return view('student.edit',[
+    return view('dashboard.student.edit',[
     "title"=>"$title",
     "student"=> $student,
-    "kelas" => Kelas::all()
+    "kelas" => Kelas::all(),
+    
         ]);
     }
     //Kalau mau pakai disable di input nis di edit.blade.php maka pake kodingan ini dan pasang disable di input nis
@@ -60,7 +73,7 @@ class StudentController extends Controller
         $result = $student->update($validateData);
     
         if ($result) {
-            return redirect('/student/all')->with('success', 'Data Siswa berhasil dirubah');
+            return redirect('/dashboard/student/all')->with('success', 'Data Siswa berhasil dirubah');
         }
     }
     
@@ -92,7 +105,7 @@ class StudentController extends Controller
         }
         $result = Student::create($validateData);
         if ($result) {
-            return redirect('/student/all')->with('success','Data Siswa berhasil ditambah');
+            return redirect('/dashboard/student/all')->with('success','Data Siswa berhasil ditambah');
         } else {
             return back()->withInput()->with('error', 'Gagal Menambahkan data');
         }
@@ -104,5 +117,14 @@ class StudentController extends Controller
     //         "student" => Student::find($student)
     //     ]);
     // }
-
+//     public function user() {
+        
+//         $user = User::first(); // Assuming you want the first user
+//         if ($user) {
+//             return $user->name;
+//         } else {
+//             return 'User';
+//         }
+    
+// }
 }

@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('dashboard.layouts.main')
 @section('container')
 @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -19,7 +19,15 @@
             <td>{{$kelas["kelas_siswa"]}}</td>
             <td>
                 <a type="button" href="/kelas/detail/{{$kelas->id}}"  class="btn btn-primary"  style="color: black">Detail</a>
-                
+            @if($isAuthenticated)
+                <a type="button" href="/kelas/edit/{{$kelas->id}}"  class="btn btn-warning">Edit</a>
+                <form action="/kelas/delete/{{$kelas->id}}" method="post" class="d-inline">
+                    @method('delete')
+                    @csrf
+                        <button onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger" style="color: black">Delete</button>
+                </form>
+            @endif
+               
         </td>
         </tbody>
     @endforeach

@@ -4,43 +4,59 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
 {
-    public function index(){
-        return view('kelas.all',[
+    public function index() {
+       // Assuming you have a specific user_id you want to pass
+        
+        // Call the user function and pass the $user_id
+        
+        
+        return view('dashboard.kelas.all', [
             "title" => "Kelas",
-           "kelass" => Kelas::all()
+            "kelass" => Kelas::all(),
+            "isAuthenticated" => Auth::check(),
+            // Access the username from the returned data
         ]);
     }
+    
     public function show($kelasId){
+        
         $kelas = Kelas::find($kelasId);
         $title = "Details " . $kelas->nama_siswa;
     
-        return view("kelas.detail", [
+        return view("dashboard.kelas.detail", [
             "title" => $title,
-            "kelas" => $kelas
+            "kelas" => $kelas,
+            "isAuthenticated" => Auth::check(),
         ]);
     }
   
     public function destroy(Kelas $kelas){
         $result = $kelas->delete();
         if($result){
-        return redirect('/kelas/all')->with('success','Data Siswa berhasil dihapus');
+        return redirect('/dashboard/kelas/all')->with('success','Data Siswa berhasil dihapus');
         }
     }
     public function create(){
+        
         $title = "Add Data";
-        return view("kelas.create", [
+        return view("dashboard.kelas.create", [
             "title" => $title,
+            
         ]);
         
     }
     public function edit(Kelas $kelas){
+        
         $title = "Edit " . $kelas->kelas_siswa;
-    return view('kelas.edit',[
+    return view('dashboard.kelas.edit',[
     "title"=>"$title",
-    "kelas"=> $kelas
+    "kelas"=> $kelas,
+    
         ]);
     }
     //Kalau mau pakai disable di input nis di edit.blade.php maka pake kodingan ini dan pasang disable di input nis
@@ -48,7 +64,7 @@ class KelasController extends Controller
         $kelas = Kelas::find($kelasId);
         $result = $kelas->update($request->all());
         if ($result) {
-            return redirect('/kelas/all')->with('success','Data Siswa berhasil dirubah');
+            return redirect('/dashboard/kelas/all')->with('success','Data Siswa berhasil dirubah');
         }
     }
     //sedangkan kalau mau hanya memakai readonly alias yang sekarang bisa pakai yang ini
@@ -71,7 +87,7 @@ class KelasController extends Controller
         ]);
         $result = Kelas::create($validateData);
         if ($result) {
-            return redirect('/kelas/all')->with('success','Data Siswa berhasil ditambah');
+            return redirect('/dashboard/kelas/all')->with('success','Data Siswa berhasil ditambah');
         }
         
         }
@@ -81,4 +97,5 @@ class KelasController extends Controller
     //         "student" => Student::find($student)
     //     ]);
     // }
+
 }
