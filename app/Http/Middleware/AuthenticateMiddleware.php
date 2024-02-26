@@ -10,9 +10,14 @@ class AuthenticateMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if the requested URL is '/dashboard/student/all' or '/dashboard/kelas/all'
-        if ($request->is('dashboard/student/all') || $request->is('dashboard/kelas/all')) {
-            // If the user is not authenticated, redirect them to the login page
+        // Check if the requested URL is the login page
+        if ($request->is('login/index')) {
+            // If the user is already authenticated, redirect them to the home page
+            if (Auth::check()) {
+                return redirect('/home');
+            }
+        } elseif ($request->is('dashboard/*')) {
+            // If the user is accessing dashboard routes and is not authenticated, redirect them to the login page
             if (!Auth::check()) {
                 return redirect('/login/index');
             }

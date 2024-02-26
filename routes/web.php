@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\HomeAboutController;
+use App\Http\Middleware\RedirectIfAuthenticated;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,10 +25,11 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [HomeAboutController::class, 'home']);
-
 Route::group(["prefix"=>"/login"],function(){
-    Route::get('/index', [AuthController::class, 'login']);
-    Route::post('/post', [AuthController::class, 'loginPost']);
+    Route::middleware([RedirectIfAuthenticated::class])->group(function () {
+        Route::get('/index', [AuthController::class, 'login']);
+        Route::post('/post', [AuthController::class, 'loginPost']);
+    });
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 Route::group(["prefix"=>"/register"],function(){
@@ -37,7 +39,7 @@ Route::group(["prefix"=>"/register"],function(){
 Route::get('/about', [HomeAboutController::class, 'about']);
 
 Route::group(["prefix"=>"/student"],function(){
-    Route::get('/all', [StudentController::class, 'index']);
+    Route::get('/all', [StudentController::class, 'indexhome']);
     Route::get('/detail/{student}', [StudentController::class, 'show']);
     Route::get('/edit/{student}', [StudentController::class, 'edit']);
     Route::put('/update/{student}', [StudentController::class, 'update']);
@@ -46,7 +48,7 @@ Route::group(["prefix"=>"/student"],function(){
     Route::delete('/delete/{student}', [StudentController::class,'destroy']);
 });
 Route::group(["prefix"=>"/kelas"],function(){
-    Route::get('/all', [KelasController::class, 'index']);
+    Route::get('/all', [KelasController::class, 'indexhome']);
     Route::get('/detail/{kelas}', [KelasController::class, 'show']);
     Route::get('/edit/{kelas}', [KelasController::class, 'edit']);
     Route::put('/update/{kelas}', [KelasController::class, 'update']);

@@ -30,8 +30,10 @@
 
 @auth
 <div class="sidebar">
+    <a href="/home">Home</a>
     <a href="/dashboard/student/all">Student Dashboard</a>
     <a href="/dashboard/kelas/all">Kelas Dashboard</a>
+    
     <div>
         @auth
     <a class="nav-link me-md-4" ><i class="fa-solid fa-user"></i> {{ Auth::user()->name }}</a>

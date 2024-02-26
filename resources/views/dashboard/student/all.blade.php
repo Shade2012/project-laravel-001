@@ -7,8 +7,16 @@
     </div>
 @endif
 <h1>Data Students</h1>
+@if($isAuthenticated)
 <a type="button" href="/student/create" class="btn btn-primary" style="color: white; margin-top: 5px; margin-right: 10px; margin-bottom: 15px;">Add New Data</a>
+<form action="/dashboard/student/all" method="GET" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="Search students..." value="{{ request('query') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
 
+@endif
 
 <table  class="table">
     <thead class="table-dark">
@@ -33,9 +41,36 @@
                         @csrf
                         <button onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')" type="submit" class="btn btn-danger" style="color: black">Delete</button>
                     </form>
+                    
                 @endif
+
             </td>
         </tbody>
     @endforeach
+
 </table>
+@if ($isAuthenticated)
+        
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        {{-- Previous Page Link --}}
+        @if ($students->onFirstPage())
+            <span>&laquo; Previous</span>
+        @else
+            <a href="{{ $students->previousPageUrl() }}" rel="prev">&laquo; Previous</a>
+        @endif
+
+        {{-- Next Page Link --}}
+        @if ($students->hasMorePages())
+            <a href="{{ $students->nextPageUrl() }}" rel="next">Next &raquo;</a>
+        @else
+            <span>Next &raquo;</span>
+        @endif
+    </div>
+    <div>
+        Page {{ $students->currentPage() }} of {{ $students->lastPage() }} <!-- Page information -->
+    </div>
+</div>
+
+    @endif
 @endsection
