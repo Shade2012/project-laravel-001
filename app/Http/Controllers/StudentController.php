@@ -6,19 +6,40 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\Paginator;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::all();
+        $query = $request->input('query');
+    
+        // If there's a search query, filter the students accordingly
+        if ($query) {
+            $students = Student::where('nama_siswa', 'like', '%' . $query . '%')
+                                ->orWhere('nis_siswa', 'like', '%' . $query . '%')
+                                ->paginate(4); // 10 students per page
+        } else {
+            // If no search query, fetch all students with pagination
+            $students = Student::paginate(4); // 10 students per page
+        }
+    
         return view('dashboard.student.all', [
             "title" => "Students",
             "students" => $students,
             "isAuthenticated" => Auth::check(),
         ]);
     }
+    public function indexhome()
+    {
+        return view('student.all', [
+            "title" => "Students",
+            "students" => Student::all(),
+        ]);
+    }
+
     public function show($studentId)
     {
         $student = Student::findOrFail($studentId);

@@ -7,7 +7,6 @@
             </div>
         @endif
 <h1>Data Students</h1>
-<a type="button" href="/student/create" class="btn btn-primary" style="color: white; margin-top: 5px; margin-right: 10px; margin-bottom: 15px;">Add New Data</a>
 
 
 <table  class="table">

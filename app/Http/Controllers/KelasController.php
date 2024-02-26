@@ -5,23 +5,42 @@ use App\Models\Kelas;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
        // Assuming you have a specific user_id you want to pass
         
         // Call the user function and pass the $user_id
-        
+        $query = $request->input('query');
+    
+        // If there's a search query, filter the students accordingly
+        if ($query) {
+            $kelass = Kelas::where('kelas_siswa', 'like', '%' . $query . '%')
+                                ->paginate(4); 
+        } else {
+            // If no search query, fetch all students with pagination
+            $kelass = Kelas::paginate(4); // 10 students per page
+        }
         
         return view('dashboard.kelas.all', [
             "title" => "Kelas",
-            "kelass" => Kelas::all(),
+            "kelass" => $kelass,
             "isAuthenticated" => Auth::check(),
             // Access the username from the returned data
         ]);
     }
+    public function indexhome( ) {
+      
+         return view('kelas.all', [
+             "title" => "Kelas",
+             "kelass" => Kelas::all(),
+             
+             // Access the username from the returned data
+         ]);
+     }
     
     public function show($kelasId){
         
